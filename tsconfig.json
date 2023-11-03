@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+      "target": "ES6",
+      "module": "CommonJS",
+      "moduleResolution": "node",
+      "baseUrl": "src",
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "sourceMap": true,
+      "noImplicitAny": true,
+      "esModuleInterop": true,
+      "strict": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "resolveJsonModule": true, // Add this line if not present
+      // ...
+    },
+    "include": ["src/**/*.ts", "prisma/**/*.ts"],
+  }
+  

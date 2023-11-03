@@ -1,0 +1,19 @@
+
+# Exclude any .git directory and .gitignore file
+.git
+.gitignore
+
+# Exclude log files
+*.log
+
+# Exclude development-specific files and directories
+*.md
+*.ts
+*.tsx
+*.test.js
+*.test.ts
+
+# Exclude .env files
+.env
+
+

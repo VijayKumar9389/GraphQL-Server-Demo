@@ -1,0 +1,168 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  isAdmin  Boolean @default(false)
+  username String  @unique
+  password String
+}
+
+model Project {
+  id             Int             @id @default(autoincrement())
+  name           String
+  notes          String
+  surveyLink     String
+  stakeholders   Stakeholder[]   @relation("StakeholderToProject")
+  deliveries     Delivery[]      @relation("DeliveryToProject")
+  logs           Log[]           @relation("ProjectToLog")
+  items          Item[]          @relation("ItemToProject")
+  projectRecords ProjectRecord[] @relation("ProjectRecordToProject")
+}
+
+model ProjectRecord {
+  id                Int         @id @default(autoincrement())
+  tract             String
+  pin               String
+  structure         String
+  interest          String
+  stakeholderStatus String
+  name              String
+  streetAddress     String
+  mailingAddress    String
+  phoneNumber       String
+  occupants         String
+  worksLand         String
+  contacted         String
+  attempts          Int
+  consultation      String
+  followUp          String
+  tractComments     String
+  pageNo            String
+  keepDelete        String
+  email             String
+  Commodity         String
+  pipelineStatus    String
+  stakeholderId     Int
+  projectId         Int
+  tractRecordId     Int
+  stakeholder       Stakeholder @relation(name: "StakeholderToProjectRecord", fields: [stakeholderId], references: [id])
+  project           Project     @relation(name: "ProjectRecordToProject", fields: [projectId], references: [id])
+  tractRecord       TractRecord @relation(name: "TractRecordToProjectRecord", fields: [tractRecordId], references: [id])
+}
+
+model Stakeholder {
+  id                  Int             @id @unique @default(autoincrement())
+  name                String
+  streetAddress       String
+  mailingAddress      String
+  phoneNumber         String
+  interest            String
+  isPerson            String
+  stakeholderComments String
+  stakeholderStatus   String
+  contacted           String
+  consultation        String
+  attempts            Int
+  email               String
+  followUp            String
+  projectId           Int
+  projects            Project       @relation("StakeholderToProject", fields: [projectId], references: [id]) // Added this relation
+  tractRecords        TractRecord[]
+  package             Package?        @relation("StakeholdertoPackage")
+  logs                Log[]           @relation("StakeholderLogs")
+  projectRecords      ProjectRecord[] @relation("StakeholderToProjectRecord")
+  packageId           Int?            @unique
+}
+
+model TractRecord {
+  id             Int             @id @default(autoincrement())
+  tract          String
+  pin            String
+  structure      String
+  occupants      String
+  worksLand      String
+  tractComments  String
+  pipelineStatus String
+  commodity      String
+  pageNumber     String
+  keepdelete     String
+  stakeholderId  Int
+  stakeholder    Stakeholder     @relation(fields: [stakeholderId], references: [id])
+  logs           Log[]           @relation("TractRecordLogs")
+  projectRecords ProjectRecord[] @relation("TractRecordToProjectRecord")
+}
+
+model Delivery {
+  id        Int       @id @default(autoincrement())
+  date      DateTime
+  status    String
+  projectId Int
+  project   Project   @relation(name: "DeliveryToProject", fields: [projectId], references: [id])
+  packages  Package[] @relation("DeliveryToPackage")
+  logs      Log[]     @relation("DeliveryLogs")
+}
+
+model Package {
+  id            Int          @id @default(autoincrement())
+  packageType   PackageType? @relation(name: "PackageToType", fields: [packageTypeId], references: [id])
+  packageTypeId Int?
+  delivery      Delivery     @relation(name: "DeliveryToPackage", fields: [deliveryId], references: [id])
+  deliveryId    Int
+  stakeholder   Stakeholder  @relation("StakeholdertoPackage", fields: [id], references: [packageId])
+  stakeholderId Int
+  logs          Log[]        @relation("PackageLogs")
+}
+
+model PackageType {
+  id       Int           @id @default(autoincrement())
+  name     String
+  packages Package[]     @relation("PackageToType")
+  items    PackageItem[]
+}
+
+model PackageItem {
+  id            Int         @id @default(autoincrement())
+  packageType   PackageType @relation(fields: [packageTypeId], references: [id])
+  packageTypeId Int
+  item          Item        @relation(name: "PackageItemToItem", fields: [itemId], references: [id])
+  itemId        Int
+  quantity      Int
+}
+
+model Item {
+  id           Int           @id @default(autoincrement())
+  name         String
+  description  String
+  projectId    Int
+  project      Project       @relation(name: "ItemToProject", fields: [projectId], references: [id])
+  packageItems PackageItem[] @relation("PackageItemToItem")
+  logs         Log[]         @relation("ItemLogs")
+}
+
+model Log {
+  id            Int          @id @default(autoincrement())
+  project       Project      @relation(name: "ProjectToLog", fields: [projectId], references: [id])
+  projectId     Int
+  timestamp     DateTime
+  details       Json
+  stakeholder   Stakeholder? @relation("StakeholderLogs", fields: [stakeholderId], references: [id])
+  stakeholderId Int?
+  delivery      Delivery?    @relation("DeliveryLogs", fields: [deliveryId], references: [id])
+  deliveryId    Int?
+  package       Package?     @relation("PackageLogs", fields: [packageId], references: [id])
+  packageId     Int
+
+  // Add more entities as needed
+  TractRecord   TractRecord? @relation("TractRecordLogs", fields: [tractRecordId], references: [id])
+  tractRecordId Int?
+  Item          Item?        @relation("ItemLogs", fields: [itemId], references: [id])
+  itemId        Int?
+}
