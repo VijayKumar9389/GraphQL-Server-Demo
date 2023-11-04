@@ -27,6 +27,48 @@ model Project {
   projectRecords ProjectRecord[] @relation("ProjectRecordToProject")
 }
 
+model Stakeholder {
+  id                  Int             @id @unique @default(autoincrement())
+  name                String
+  streetAddress       String
+  mailingAddress      String
+  phoneNumber         String
+  interest            String
+  isPerson            String
+  stakeholderComments String
+  stakeholderStatus   String
+  contacted           String
+  consultation        String
+  attempts            String
+  email               String
+  followUp            String
+  projectId           Int
+  projects            Project       @relation("StakeholderToProject", fields: [projectId], references: [id]) // Added this relation
+  tractRecords        TractRecord[]
+  package             Package?        @relation("StakeholdertoPackage")
+  logs                Log[]           @relation("StakeholderLogs")
+  projectRecords      ProjectRecord[] @relation("StakeholderToProjectRecord")
+  packageId           Int?            @unique
+}
+
+model TractRecord {
+  id             Int             @id @default(autoincrement())
+  tract          String
+  pin            String
+  structure      String
+  occupants      String
+  worksLand      String
+  tractComments  String
+  pipelineStatus String
+  commodity      String
+  pageNumber     String
+  keepdelete     String
+  stakeholderId  Int
+  stakeholder    Stakeholder     @relation(fields: [stakeholderId], references: [id])
+  logs           Log[]           @relation("TractRecordLogs")
+  projectRecords ProjectRecord[] @relation("TractRecordToProjectRecord")
+}
+
 model ProjectRecord {
   id                Int         @id @default(autoincrement())
   tract             String
@@ -56,48 +98,6 @@ model ProjectRecord {
   stakeholder       Stakeholder @relation(name: "StakeholderToProjectRecord", fields: [stakeholderId], references: [id])
   project           Project     @relation(name: "ProjectRecordToProject", fields: [projectId], references: [id])
   tractRecord       TractRecord @relation(name: "TractRecordToProjectRecord", fields: [tractRecordId], references: [id])
-}
-
-model Stakeholder {
-  id                  Int             @id @unique @default(autoincrement())
-  name                String
-  streetAddress       String
-  mailingAddress      String
-  phoneNumber         String
-  interest            String
-  isPerson            String
-  stakeholderComments String
-  stakeholderStatus   String
-  contacted           String
-  consultation        String
-  attempts            Int
-  email               String
-  followUp            String
-  projectId           Int
-  projects            Project       @relation("StakeholderToProject", fields: [projectId], references: [id]) // Added this relation
-  tractRecords        TractRecord[]
-  package             Package?        @relation("StakeholdertoPackage")
-  logs                Log[]           @relation("StakeholderLogs")
-  projectRecords      ProjectRecord[] @relation("StakeholderToProjectRecord")
-  packageId           Int?            @unique
-}
-
-model TractRecord {
-  id             Int             @id @default(autoincrement())
-  tract          String
-  pin            String
-  structure      String
-  occupants      String
-  worksLand      String
-  tractComments  String
-  pipelineStatus String
-  commodity      String
-  pageNumber     String
-  keepdelete     String
-  stakeholderId  Int
-  stakeholder    Stakeholder     @relation(fields: [stakeholderId], references: [id])
-  logs           Log[]           @relation("TractRecordLogs")
-  projectRecords ProjectRecord[] @relation("TractRecordToProjectRecord")
 }
 
 model Delivery {

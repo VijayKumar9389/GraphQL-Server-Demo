@@ -40,7 +40,6 @@ export interface StakeholderInput {
 }
 
 export interface TractRecordInput {
-    id: number; // Replace Int! with number
     tract: string; // Replace String! with string
     pin: string; // You can keep the question mark for optional fields
     structure: string;
@@ -54,5 +53,8 @@ export interface TractRecordInput {
 }
 
 export interface ProjectInput {
-project: ProjectRecordInput[];
+    name: string,
+    notes: string,
+    surveyLink: string,
+    projectRecords: ProjectRecordInput[];
 }

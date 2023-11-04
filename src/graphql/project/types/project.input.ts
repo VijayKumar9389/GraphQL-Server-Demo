@@ -2,7 +2,10 @@ import { gql } from 'apollo-server-express';
 
 export const projectInputTypes = gql`
 input ProjectInput {
-  project: [ProjectRecordInput]
+    name: String
+    notes: String
+    surveyLink: String
+    projectRecords: [ProjectRecordInput]
 }
 
 input ProjectRecordInput {
@@ -43,20 +46,21 @@ input StakeholderInput {
     attempts: String
     email: String
     followUp: String
-    tractRecords: [TractRecordInput]  # Add tractRecords input field here
+    tractRecords: [TractRecordInput] 
   }
+  
+input TractRecordInput {
+  id: Int
+  tract: String
+  pin: String
+  structure: String
+  occupants: String
+  worksLand: String
+  tractComments: String
+  pipelineStatus: String
+  commodity: String
+  pageNumber: String
+  keepdelete: String
+}
 
-  input TractRecordInput {
-    id: Int!
-    tract: String!
-    pin: String
-    structure: String
-    occupants: String
-    worksLand: String
-    tractComments: String
-    pipelineStatus: String
-    commodity: String
-    pageNumber: String
-    keepdelete: String
-  }
 `;

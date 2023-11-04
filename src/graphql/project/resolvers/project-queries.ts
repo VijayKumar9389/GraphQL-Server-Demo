@@ -1,5 +1,5 @@
 // import { getProjects, getProjectWithStakeholders, getStakeholdersByProjectAndTractNumber } from '../services/project.service';
-
+import { getProjectWithStakeholders } from '../services/project.service';
 const projectQueries = {
   // projects: async (parent: any, args: any, context: any) => {
   //   const allProjects = await getProjects();
@@ -7,11 +7,12 @@ const projectQueries = {
   //   return allProjects;
   // },
   //
-  // getProjectWithStakeholders: async (parent: any, args: any, context: any) => {
-  //   const { projectId } = args;
-  //   const project = await getProjectWithStakeholders(projectId);
-  //   return project;
-  // },
+  getProjectWithStakeholders: async (parent: any, args: any, context: any) => {
+    const { projectId } = args;
+    const project = await getProjectWithStakeholders(projectId);
+    return project;
+  },
+
   //
   // getStakeholdersByProjectAndTractNumber: async (parent: any, args: any, context: any) => {
   //   const { projectId, tractNumber } = args;
