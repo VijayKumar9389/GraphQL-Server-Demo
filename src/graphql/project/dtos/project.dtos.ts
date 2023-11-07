@@ -1,8 +1,11 @@
 export interface ProjectRecordInput {
+    position: number;
     tract: string;
     pin: string;
     structure: string;
     interest: string;
+    isPerson: string;
+    stakeholderComments: string;
     stakeholderStatus: string;
     name: string;
     streetAddress: string;
@@ -21,6 +24,7 @@ export interface ProjectRecordInput {
     Commodity: string;
     pipelineStatus: string;
 }
+
 
 export interface StakeholderInput {
     name: string;

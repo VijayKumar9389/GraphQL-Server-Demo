@@ -11,6 +11,7 @@ ${projectOutputTypes}
 
 type Query {
     projects: [Project]
+    getStakeholderById(projectId: Int!, stakeholderId: Int!): Stakeholder
     getProjectWithStakeholders(projectId: Int!): Project
     getStakeholdersByProjectAndTractNumber(projectId: Int!, tractNumber: String!): [Stakeholder]
 }

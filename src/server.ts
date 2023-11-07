@@ -23,7 +23,7 @@ const server = new ApolloServer({
     // Handle and log errors here
     console.error(error);
     // Return a user-friendly error message if needed
-    return new Error('Internal Server Error');
+    return new Error('Internal Sersver Error');
   },
 });
 

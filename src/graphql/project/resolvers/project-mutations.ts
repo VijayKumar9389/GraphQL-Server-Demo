@@ -4,6 +4,7 @@ import {convertProjectRecordsToStakeholders} from "../services/project.service";
 // import { createStakeholder, createTractRecords } from '../services/project.service';
 
 import {PrismaClient} from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 const projectMutations = {
@@ -54,7 +55,7 @@ const projectMutations = {
                     });
 
                     // Create the tract records for the stakeholder
-                    const tractRecords = stakeholder.tractRecords.map((tractRecord) => {
+                    const tractRecords = stakeholder.tractRecords.map((tractRecord: TractRecordInput) => {
                         return {
                             tract: tractRecord.tract,
                             pin: tractRecord.pin,
@@ -86,60 +87,6 @@ const projectMutations = {
         }
     }
 
-    // createProject: async (parent: any, args: { project: ProjectInput }, context: any) => {
-    //     try {
-    //         const { project  } = args;
-    //         const { prisma } = context;
-    //
-    //         // Check if the required fields are provided
-    //         if (!project || !project.name) {
-    //             throw new Error('Project name is required.');
-    //         }
-    //
-    //         // Step 1: Create the project first
-    //         const createdProject = await prisma.project.create({
-    //             data: {
-    //                 name: project.name,
-    //                 notes: project.notes,
-    //                 surveyLink: project.surveyLink,
-    //             },
-    //         });
-    //
-    //         // Step 2: Create an array to store nested stakeholders with TractRecords
-    //         const createdStakeholders  = await Promise.all(
-    //             project.stakeholders.map(async (stakeholderArgs) => {
-    //                 const newStakeholder = await createStakeholder(createdProject, stakeholderArgs);
-    //
-    //                 // If there are TractRecords, create them and associate with the Stakeholder
-    //                 if (stakeholderArgs.tractRecords && stakeholderArgs.tractRecords.length > 0) {
-    //                     const createdTractRecords = await createTractRecords(newStakeholder.id, stakeholderArgs.tractRecords);
-    //
-    //                     // Add the created TractRecords to the Stakeholder
-    //                     await prisma.stakeholder.update({
-    //                         where: { id: newStakeholder.id },
-    //                         data: {
-    //                             tractRecords: {
-    //                                 connect: createdTractRecords.map((tractRecord) => ({ id: tractRecord.id })),
-    //                             },
-    //                         },
-    //                     });
-    //                 }
-    //
-    //                 return newStakeholder;
-    //             })
-    //         );
-    //
-    //         // Return the created project with associated stakeholders
-    //         return {
-    //             ...createdProject,
-    //             stakeholders: createdStakeholders,
-    //         };
-    //     } catch (error) {
-    //         // Handle errors and throw an internal server error
-    //         console.error('Error creating project:', error);
-    //         throw new Error('Internal Server Error');
-    //     }
-    // },
 };
 
 export default projectMutations;
