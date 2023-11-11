@@ -17,26 +17,9 @@ type Query {
 }
 
 type Mutation {
+ createDeliveryAndPackage(deliveryInput: DeliveryInput): Delivery
     createProject(project: ProjectInput!): String
-  }
+    updateStakeholder(id: Int!, input: StakeholderUpdateInput!): Stakeholder
+}
 `;
-
-// Original code
-//
-// export const projectTypeDefs = gql`
-//
-// ${projectTypes}
-// ${projectInputTypes}
-// ${projectOutputTypes}
-//
-// type Query {
-//     projects: [Project]
-//     getProjectWithStakeholders(projectId: Int!): Project
-//     getStakeholdersByProjectAndTractNumber(projectId: Int!, tractNumber: String!): [Stakeholder]
-// }
-//
-// type Mutation {
-//     createProject(project: ProjectInput!): Project
-//   }
-// `;
 

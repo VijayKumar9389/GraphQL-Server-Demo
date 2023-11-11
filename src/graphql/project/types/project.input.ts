@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express';
+import {gql} from 'apollo-server-express';
 
 export const projectInputTypes = gql`
 input ProjectInput {
@@ -8,12 +8,38 @@ input ProjectInput {
     projectRecords: [ProjectRecordInput]
 }
 
+input StakeholderUpdateInput {
+  name: String
+  streetAddress: String
+  mailingAddress: String
+  phoneNumber: String
+  isPerson: String
+  stakeholderComments: String
+  stakeholderStatus: String
+  contacted: String
+  consultation: String
+  attempts: String
+  email: String
+  followUp: String
+}
+
+input DeliveryInput {
+  date: String!
+  status: String!
+  projectId: Int!
+  packages: [PackageInput]!
+}
+
+input PackageInput {
+  deliveryId: Int!
+  stakeholderId: Int!
+}
+
 input StakeholderInput {
     name: String
     streetAddress: String
     mailingAddress: String
     phoneNumber: String
-    interest: String
     isPerson: String
     stakeholderComments: String
     stakeholderStatus: String
@@ -26,10 +52,12 @@ input StakeholderInput {
 }
 
 input TractRecordInput {
-    tract: String
+    position: Int
+    tract: Int
+    interest: String
     pin: String
     structure: String
-    occupants: String
+    occupants: Int
     worksLand: String
     tractComments: String
     pipelineStatus: String
@@ -40,7 +68,7 @@ input TractRecordInput {
 
 input ProjectRecordInput {
     position: Int
-    tract: String
+    tract: Int
     pin: String
     structure: String
     interest: String
@@ -51,7 +79,7 @@ input ProjectRecordInput {
     streetAddress: String
     mailingAddress: String
     phoneNumber: String
-    occupants: String
+    occupants: Int
     worksLand: String
     contacted: String
     attempts: String
@@ -64,5 +92,4 @@ input ProjectRecordInput {
     Commodity: String
     pipelineStatus: String
 }
-
 `;

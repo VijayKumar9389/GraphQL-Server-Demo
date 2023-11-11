@@ -1,36 +1,37 @@
-import {ProjectRecordInput, StakeholderInput, TractRecordInput} from "../dtos/project.dtos";
+import {ProjectRecordInput} from "../models/project.models";
+import {StakeholderInput, TractRecordInput} from "../models/stakeholder.models";
 import {PrismaClient} from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export const getProjectWithStakeholders = async (projectId: number) => {
-  try {
-    const project = await prisma.project.findUnique({
-      where: { id: projectId },
-      include: { stakeholders: { include: { tractRecords: true } } },
-    });
-    if (!project) {
-      throw new Error(`Project with id ${projectId} not found.`);
+    try {
+        const project = await prisma.project.findUnique({
+            where: { id: projectId },
+            include: { stakeholders: { include: { tractRecords: true } } },
+        });
+        if (!project) {
+            throw new Error(`Project with id ${projectId} not found.`);
+        }
+        return project;
+    } catch (error) {
+        throw error;
     }
-    return project;
-  } catch (error) {
-    throw error;
-  }
 };
 
 export const getStakeholdersByProjectAndTractNumber = async (projectId: number, tractNumber: number) => {
-  try {
-    const stakeholders = await prisma.stakeholder.findMany({
-      where: {
-        projectId: projectId,
-        tractRecords: { some: { tract: tractNumber } },
-      },
-      include: { tractRecords: true },
-    });
-    return stakeholders;
-  } catch (error) {
-    throw error;
-  }
+    try {
+        const stakeholders = await prisma.stakeholder.findMany({
+            where: {
+                projectId: projectId,
+                tractRecords: { some: { tract: tractNumber } },
+            },
+            include: { tractRecords: true },
+        });
+        return stakeholders;
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const convertProjectRecordsToStakeholders = (projectRecords: ProjectRecordInput[]): StakeholderInput[] => {

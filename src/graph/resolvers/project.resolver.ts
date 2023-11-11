@@ -1,5 +1,5 @@
-import projectQueries from './project-queries';
-import projectMutations from './project-mutations';
+import projectQueries from './queries/project.queries';
+import projectMutations from './mutations/project.mutations';
 
 const projectResolvers = {
     Query: {

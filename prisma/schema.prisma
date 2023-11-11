@@ -32,7 +32,6 @@ model Stakeholder {
   streetAddress       String
   mailingAddress      String
   phoneNumber         String
-  interest            String
   isPerson            String
   stakeholderComments String
   stakeholderStatus   String
@@ -42,7 +41,7 @@ model Stakeholder {
   email               String
   followUp            String
   projectId           Int
-  projects            Project       @relation("StakeholderToProject", fields: [projectId], references: [id]) // Added this relation
+  projects            Project         @relation("StakeholderToProject", fields: [projectId], references: [id]) // Added this relation
   tractRecords        TractRecord[]
   package             Package?        @relation("StakeholdertoPackage")
   logs                Log[]           @relation("StakeholderLogs")
@@ -51,10 +50,12 @@ model Stakeholder {
 
 model TractRecord {
   id             Int             @id @unique @default(autoincrement())
-  tract          String
+  tract          Int
+  position       Int
   pin            String
+  interest       String
   structure      String
-  occupants      String
+  occupants      Int
   worksLand      String
   tractComments  String
   pipelineStatus String
@@ -66,10 +67,9 @@ model TractRecord {
   logs           Log[]           @relation("TractRecordLogs")
 }
 
-
 model Delivery {
   id        Int       @id @default(autoincrement())
-  date      DateTime
+  date      String
   status    String
   projectId Int
   project   Project   @relation(name: "DeliveryToProject", fields: [projectId], references: [id])
@@ -83,8 +83,8 @@ model Package {
   packageTypeId Int?
   delivery      Delivery     @relation(name: "DeliveryToPackage", fields: [deliveryId], references: [id])
   deliveryId    Int
-  stakeholder   Stakeholder  @relation("StakeholdertoPackage", fields: [id], references: [packageId])
-  stakeholderId Int
+  stakeholder   Stakeholder  @relation(name: "StakeholdertoPackage", fields: [stakeholderId], references: [id])
+  stakeholderId Int          @unique
   logs          Log[]        @relation("PackageLogs")
 }
 
@@ -126,8 +126,6 @@ model Log {
   deliveryId    Int?
   package       Package?     @relation("PackageLogs", fields: [packageId], references: [id])
   packageId     Int
-
-  // Add more entities as needed
   TractRecord   TractRecord? @relation("TractRecordLogs", fields: [tractRecordId], references: [id])
   tractRecordId Int?
   Item          Item?        @relation("ItemLogs", fields: [itemId], references: [id])

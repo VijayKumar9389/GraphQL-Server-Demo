@@ -1,6 +1,6 @@
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
-import schema from './graphql/schema'; // Import your GraphQL schema here
+import schema from './graph/schema'; // Import your GraphQL schema here
 import { createPrismaService } from './config/db'; // Import the createPrismaService function
 // At the top of your main JavaScript/TypeScript file (e.g., server.js)
 require('dotenv').config();
