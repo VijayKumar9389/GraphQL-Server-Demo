@@ -1,42 +1,47 @@
-import express from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import { ApolloServer } from 'apollo-server-express';
-import schema from './graph/schema'; // Import your GraphQL schema here
-import { createPrismaService } from './config/db'; // Import the createPrismaService function
-// At the top of your main JavaScript/TypeScript file (e.g., server.js)
+import { createPrismaService } from './config/db';
+import validateToken from './middleware/auth';
+import { upload } from './middleware/upload';
+import schema from './graphql/schema';
+import cors from 'cors';
+import authRoutes from "./api/routes/auth.routes";
+
 require('dotenv').config();
 
-// import authenticate from './middleware/auth'; // Import the authenticate middleware
-const app = express();
-const port = 3005;
+const app: Express = express();
+const port: string | number = process.env.PORT || 3005;
+const prismaService = createPrismaService();
 
-const prismaService = createPrismaService(); // Create the PrismaService
-
-// Increase the JSON request size limit to 50MB
 app.use(express.json({ limit: '50mb' }));
+app.use(upload.single('file'));
+app.use(cors({
+  origin: ['http://localhost:3000'],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
-// Use the authenticate middleware to protect your GraphQL endpoint
-// app.use('/graphql-playground', authenticate); // Authentication middleware
+// Middleware for GraphQL endpoint only
+app.use('/graphql', validateToken);
+app.use('/auth', authRoutes);
+
+
+// Apollo Server
 const server = new ApolloServer({
-  schema, // Use the schema you've created
-  context: () => prismaService, // Provide Prisma Service to the context
+  schema,
   formatError: (error) => {
-    // Handle and log errors here
     console.error(error);
-    // Return a user-friendly error message if needed
-    return new Error('Internal Sersver Error');
+    return new Error('Internal Server Error');
   },
 });
 
-// Start the Apollo Server
+//Start the server
 server.start().then(() => {
-  // Apply Apollo Server middleware after it's started
   server.applyMiddleware({ app });
 
-  // Log a message when the server starts and the database is connected
   console.log('Server is running on port', port);
   console.log('Connected to the database.');
 
-  // Start your Express app
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
   });

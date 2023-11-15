@@ -1,16 +1,21 @@
-// schema.ts
 import { makeExecutableSchema } from 'graphql-tools';
 import { GraphQLSchema } from 'graphql';
 
-import { projectTypeDefs } from './project/project.schema';
-import { userTypeDefs } from './user/user.schema';
+import projectResolvers from './resolvers/project.resolver';
+import { projectTypeDefs } from './schema/project.schema';
 
-import projectResolvers from './project/resolvers/project-resolvers';
-import userResolvers from './user/resolvers/user.resolvers';
+import deliveryResolver from "./resolvers/delivery.resolver";
+import {deliveryTypeDefs} from "./schema/delivery.schema";
+
+import stakeholderResolvers from "./resolvers/stakeholder.resolvers";
+import {stakeholderTypeDefs} from "./schema/stakeholder.schema";
+
+import userResolvers from "./resolvers/user.resolvers";
+import {userTypeDefs} from "./schema/user.schema";
 
 const schema: GraphQLSchema = makeExecutableSchema({
-  typeDefs: [projectTypeDefs, userTypeDefs],
-  resolvers: [projectResolvers, userResolvers],
+    typeDefs: [projectTypeDefs, deliveryTypeDefs, stakeholderTypeDefs, userTypeDefs],
+    resolvers: [projectResolvers, deliveryResolver, stakeholderResolvers, userResolvers],
 });
 
 export default schema;

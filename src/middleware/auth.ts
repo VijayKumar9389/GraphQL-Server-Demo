@@ -1,32 +1,24 @@
-// import { ApolloServer } from 'apollo-server-express';
-// import schema from '../graphql/schema'; // Import your GraphQL schema here
-// import { createPrismaService } from '../config/db'; // Import the createPrismaService function
-// import authenticate from './middleware/auth'; // Import the authenticate middleware
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 
-// const prismaService = createPrismaService(); // Create the PrismaService
+const validateToken = (req: Request, res: Response, next: NextFunction): void => {
+    const token: string | undefined = req.headers['access-token'] as string;
+    const user: any = jwt.decode(token);
 
-// const server = new ApolloServer({
-//   schema, // Use the schema you've created
-//   context: ({ req }) => {
-//     return new Promise((resolve, reject) => {
-//       // Execute the authentication middleware
-//       authenticate(req, null, (error: any) => {
-//         if (error) {
-//           // Handle authentication errors
-//           reject(error);
-//         } else {
-//           // Authentication succeeded, provide Prisma Service and user information to the context
-//           resolve({ prisma: prismaService, user: req.user });
-//         }
-//       });
-//     });
-//   },
-//   formatError: (error) => {
-//     // Handle and log errors here
-//     console.error(error);
+    if (!token) {
+        res.send({ auth: false, msg: 'Please log in' });
+    } else {
+        jwt.verify(token, 'secret', (err, decode) => {
+            if (err) {
+                res.status(401);
+                res.json({ auth: false, msg: 'Failed to verify token' });
+                console.log(err);
+            } else {
+                console.log('Valid Token');
+                next();
+            }
+        });
+    }
+};
 
-//     // Return a user-friendly error message if needed
-//     return new Error('Internal Server Error');
-//   },
-// });
-
+export default validateToken;
